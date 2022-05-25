@@ -1,0 +1,30 @@
+{
+  "name": "personal-frontend",
+  "version": "1.0.0",
+  "description": "My personal website frontend",
+  "browserlist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.5",
+    "parcel": "^2.6.0",
+    "typescript": "^4.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderste/personal.git"
+  },
+  "author": "Stephen Hinett (coderste)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coderste/personal/issues"
+  },
+  "homepage": "https://github.com/coderste/personal#readme"
+}

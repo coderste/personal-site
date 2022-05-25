@@ -3,7 +3,6 @@ FROM golang:1.18.2-alpine
 # Working directory
 WORKDIR /api
 
-COPY ./go.mod .
 COPY . .
 
 RUN apk update && apk add --no-cache git

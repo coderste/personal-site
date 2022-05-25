@@ -8,7 +8,7 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, Something!"))
+		w.Write([]byte("Hello, to the backend!"))
 	})
 
 	log.Println("Starting server on :9000")
