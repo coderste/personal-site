@@ -1,0 +1,19 @@
+FROM golang:1.18.2-alpine
+
+# Working directory
+WORKDIR /api
+
+COPY ./go.mod .
+COPY . .
+
+RUN apk update && apk add --no-cache git
+
+# Go envs
+ENV GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+
+RUN go mod download && go mod verify
+
+# Live reload for Go
+RUN go install github.com/cosmtrek/air@latest
+
+EXPOSE 9000
