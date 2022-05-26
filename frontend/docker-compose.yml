@@ -1,9 +1,14 @@
 services:
   frontend:
+    container_name: client
     build:
-      context: ./docker
-      dockerfile: Dockerfile.dev
+      context: ./
+      dockerfile: docker/Dockerfile.dev
     ports:
-      - "8080:80"
+      - "8080:8080"
+      - "33333:33333"
     volumes:
-      - ./:/frontend
+      - ./:/client
+      - /client/node_modules/
+      - /client/.parcel-cache/
+    command: [ "npm", "start" ]

@@ -18,9 +18,11 @@
 # Go workspace file
 go.work
 
-/tmp
+/backend/tmp
 
 ## Frontend list
+/frontend/dist
+
 # Logs
 logs
 *.log

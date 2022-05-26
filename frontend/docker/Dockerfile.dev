@@ -1,15 +1,11 @@
 FROM node:16.15.0-alpine
 
 # Working directory
-WORKDIR /frontend
+WORKDIR /client
 
-ENV PATH /frontend/node_modules/.bin:$PATH
+RUN apk update && apk add --no-cache nodejs npm python3 py3-pip build-base
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY ./package.json ./package-lock.json ./
+RUN npm install --slient
 
-RUN npm instal --slient
-
-COPY . ./
-
-CMD ["npm", "start"]
+COPY . .
