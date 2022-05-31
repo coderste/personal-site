@@ -1,5 +1,5 @@
 services:
-  api:
+  backend:
     container_name: api
     build:
       context: ./

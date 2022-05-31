@@ -9,3 +9,6 @@ COPY ./package.json ./package-lock.json ./
 RUN npm install --slient
 
 COPY . .
+
+EXPOSE 33333
+# EXPOSE 8080

@@ -5,7 +5,7 @@
   "browserlist": "> 0.5%, last 2 versions, not dead",
   "source": "ui/index.html",
   "scripts": {
-    "start": "parcel ui/index.html -p 8080 --hmr-port 33333",
+    "start": "parcel ui/index.html -p 3000 --hmr-port=33333",
     "build": "parcel build"
   },
   "dependencies": {

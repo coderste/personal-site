@@ -5,10 +5,11 @@ services:
       context: ./
       dockerfile: docker/Dockerfile.dev
     ports:
-      - "8080:8080"
+      - "3000:3000"
       - "33333:33333"
     volumes:
       - ./:/client
       - /client/node_modules/
       - /client/.parcel-cache/
+    # command: [ "parcel", "ui/index.html -p 8080 --hmr-port 33333" ]
     command: [ "npm", "start" ]
