@@ -39,7 +39,7 @@ jobs:
 
           # Copy landing page root
           cp -r index.html deploy/
-          cp -r assets deploy/  # include any other static files you have
+          cp -r styles deploy/  # include any other static files you have
 
           # Copy React app to /pot
           mkdir -p deploy/pot
