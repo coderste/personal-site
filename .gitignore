@@ -22,7 +22,7 @@ go.work
 
 ## Frontend list
 /frontend/dist
-/pot-game/dist/
+/pot/dist/
 
 # Logs
 logs
