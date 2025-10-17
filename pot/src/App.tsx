@@ -22,14 +22,23 @@ const defaultState: GameState = {
 
 export default function App() {
   const [state, setState] = useState<GameState>(() => {
-    const saved = localStorage.getItem("potGameState");
-    return saved ? JSON.parse(saved) : defaultState;
+    try {
+      const saved = localStorage.getItem("potGameState");
+      return saved ? JSON.parse(saved) : defaultState;
+    } catch (err) {
+      console.error("Failed to load game state:", err);
+      return defaultState;
+    }
   });
   const [newPlayer, setNewPlayer] = useState("");
   const [bet, setBet] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("potGameState", JSON.stringify(state));
+    try {
+      localStorage.setItem("potGameState", JSON.stringify(state));
+    } catch (err) {
+      console.error("Failed to save game state:", err);
+    }
   }, [state]);
 
   const updateState = (updates: Partial<GameState>) =>
