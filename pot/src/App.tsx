@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Check, X, TrendingUp, TrendingDown } from "lucide-react";
 
 type PlayerData = { name: string; contributed: number; withdrawn: number };
@@ -21,9 +21,16 @@ const defaultState: GameState = {
 };
 
 export default function App() {
-  const [state, setState] = useState<GameState>(defaultState);
+  const [state, setState] = useState<GameState>(() => {
+    const saved = localStorage.getItem("potGameState");
+    return saved ? JSON.parse(saved) : defaultState;
+  });
   const [newPlayer, setNewPlayer] = useState("");
   const [bet, setBet] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("potGameState", JSON.stringify(state));
+  }, [state]);
 
   const updateState = (updates: Partial<GameState>) =>
     setState((prev) => ({ ...prev, ...updates }));
@@ -102,7 +109,10 @@ export default function App() {
   };
 
   const resetGame = () => {
-    if (confirm("Reset the game? All progress will be lost.")) setState(defaultState);
+    if (confirm("Reset the game? All progress will be lost.")) {
+      setState(defaultState);
+      localStorage.removeItem("potGameState");
+    }
   };
 
   const currentPlayer = state.players[state.currentTurn]?.name ?? "—";
