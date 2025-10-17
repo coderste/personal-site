@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Plus, Check, X, TrendingUp, TrendingDown } from "lucide-react";
+import { useEffect, useState } from 'react';
+
+import { Check, Plus, TrendingDown, TrendingUp, X } from 'lucide-react';
 
 type PlayerData = { name: string; contributed: number; withdrawn: number };
 type GameState = {
@@ -23,21 +24,21 @@ const defaultState: GameState = {
 export default function App() {
   const [state, setState] = useState<GameState>(() => {
     try {
-      const saved = localStorage.getItem("potGameState");
+      const saved = localStorage.getItem('potGameState');
       return saved ? JSON.parse(saved) : defaultState;
     } catch (err) {
-      console.error("Failed to load game state:", err);
+      console.error('Failed to load game state:', err);
       return defaultState;
     }
   });
-  const [newPlayer, setNewPlayer] = useState("");
-  const [bet, setBet] = useState("");
+  const [newPlayer, setNewPlayer] = useState('');
+  const [bet, setBet] = useState('');
 
   useEffect(() => {
     try {
-      localStorage.setItem("potGameState", JSON.stringify(state));
+      localStorage.setItem('potGameState', JSON.stringify(state));
     } catch (err) {
-      console.error("Failed to save game state:", err);
+      console.error('Failed to save game state:', err);
     }
   }, [state]);
 
@@ -50,15 +51,14 @@ export default function App() {
   const addPlayer = () => {
     if (!newPlayer.trim()) return;
     updatePlayers((p) => [...p, { name: newPlayer.trim(), contributed: 0, withdrawn: 0 }]);
-    setNewPlayer("");
+    setNewPlayer('');
   };
 
-  const removePlayer = (index: number) =>
-    updatePlayers((p) => p.filter((_, i) => i !== index));
+  const removePlayer = (index: number) => updatePlayers((p) => p.filter((_, i) => i !== index));
 
   const startGame = () => {
     if (state.players.length < 2) {
-      alert("You need at least 2 players to start.");
+      alert('You need at least 2 players to start.');
       return;
     }
     updateState({
@@ -76,13 +76,13 @@ export default function App() {
       currentTurn: nextTurn,
       players: state.players.map((p) => ({ ...p, contributed: p.contributed + 1 })),
     });
-    setBet("");
+    setBet('');
   };
 
   const playerWins = () => {
     const betAmount = Number(bet);
     if (!betAmount || betAmount <= 0) {
-      alert("Enter a bet amount to win");
+      alert('Enter a bet amount to win');
       return;
     }
     const nextDealer = (state.dealerIndex + 1) % state.players.length;
@@ -97,7 +97,7 @@ export default function App() {
         withdrawn: i === state.currentTurn ? p.withdrawn + winnings : p.withdrawn,
       })),
     });
-    setBet("");
+    setBet('');
   };
 
   const playerLoses = () => {
@@ -110,22 +110,21 @@ export default function App() {
       round: state.round + 1,
       players: state.players.map((p, i) => ({
         ...p,
-        contributed:
-          i === state.currentTurn ? p.contributed + 1 + betAmount : p.contributed + 1,
+        contributed: i === state.currentTurn ? p.contributed + 1 + betAmount : p.contributed + 1,
       })),
     });
-    setBet("");
+    setBet('');
   };
 
   const resetGame = () => {
-    if (confirm("Reset the game? All progress will be lost.")) {
+    if (confirm('Reset the game? All progress will be lost.')) {
       setState(defaultState);
-      localStorage.removeItem("potGameState");
+      localStorage.removeItem('potGameState');
     }
   };
 
-  const currentPlayer = state.players[state.currentTurn]?.name ?? "—";
-  const dealer = state.players[state.dealerIndex]?.name ?? "—";
+  const currentPlayer = state.players[state.currentTurn]?.name ?? '—';
+  const dealer = state.players[state.dealerIndex]?.name ?? '—';
   const getBalance = (p: PlayerData) => p.withdrawn - p.contributed;
 
   if (!state.started) {
@@ -136,17 +135,15 @@ export default function App() {
             <h1 className="text-4xl font-bold text-white mb-3">Pot Game</h1>
             <p className="text-slate-400">Track your winnings with friends</p>
           </div>
-          
+
           <div className="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-2xl p-6 space-y-6 shadow-2xl">
             <div>
-              <label className="block text-sm font-semibold text-slate-200 mb-3">
-                Add Players
-              </label>
+              <label className="block text-sm font-semibold text-slate-200 mb-3">Add Players</label>
               <div className="flex gap-2">
                 <input
                   value={newPlayer}
                   onChange={(e) => setNewPlayer(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && addPlayer()}
+                  onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
                   placeholder="Enter player name..."
                   className="flex-1 h-11 rounded-xl border border-slate-600 bg-slate-900/50 px-4 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
@@ -187,11 +184,10 @@ export default function App() {
               <button
                 onClick={startGame}
                 disabled={state.players.length < 2}
-                className={`w-full h-12 rounded-xl text-sm font-bold transition-all shadow-lg ${
-                  state.players.length < 2
-                    ? "bg-slate-700 text-slate-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 active:scale-98 shadow-blue-900/30"
-                }`}
+                className={`w-full h-12 rounded-xl text-sm font-bold transition-all shadow-lg ${state.players.length < 2
+                    ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 active:scale-98 shadow-blue-900/30'
+                  }`}
               >
                 Start Game
               </button>
@@ -234,21 +230,21 @@ export default function App() {
             </p>
             <p className="text-2xl font-bold text-white truncate">{currentPlayer}</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-emerald-600/20 to-emerald-700/10 border border-emerald-500/30 rounded-xl p-4">
             <p className="text-xs font-semibold text-emerald-300 uppercase tracking-wide mb-1">
               Pot
             </p>
             <p className="text-2xl font-bold text-white">£{state.pot}</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-purple-600/20 to-purple-700/10 border border-purple-500/30 rounded-xl p-4">
             <p className="text-xs font-semibold text-purple-300 uppercase tracking-wide mb-1">
               Dealer
             </p>
             <p className="text-2xl font-bold text-white truncate">{dealer}</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-amber-600/20 to-amber-700/10 border border-amber-500/30 rounded-xl p-4">
             <p className="text-xs font-semibold text-amber-300 uppercase tracking-wide mb-1">
               Max Bet
@@ -265,15 +261,14 @@ export default function App() {
             const balance = getBalance(p);
             const isCurrentPlayer = i === state.currentTurn;
             const isDealer = i === state.dealerIndex;
-            
+
             return (
               <div
                 key={p.name}
-                className={`rounded-xl border transition-all ${
-                  isCurrentPlayer
-                    ? "bg-gradient-to-r from-blue-600/20 to-blue-700/10 border-blue-500/50 shadow-lg shadow-blue-900/20"
-                    : "bg-slate-800/30 border-slate-700/50 hover:border-slate-600/50"
-                }`}
+                className={`rounded-xl border transition-all ${isCurrentPlayer
+                    ? 'bg-gradient-to-r from-blue-600/20 to-blue-700/10 border-blue-500/50 shadow-lg shadow-blue-900/20'
+                    : 'bg-slate-800/30 border-slate-700/50 hover:border-slate-600/50'
+                  }`}
               >
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-3">
@@ -290,36 +285,38 @@ export default function App() {
                         </span>
                       )}
                     </div>
-                    
+
                     <div className="flex items-center gap-1.5">
-                      {balance !== 0 && (
-                        balance > 0 ? (
+                      {balance !== 0 &&
+                        (balance > 0 ? (
                           <TrendingUp size={18} className="text-emerald-400" />
                         ) : (
                           <TrendingDown size={18} className="text-red-400" />
-                        )
-                      )}
-                      <p className={`text-xl font-bold ${
-                        balance > 0 
-                          ? "text-emerald-400" 
-                          : balance < 0 
-                          ? "text-red-400" 
-                          : "text-slate-400"
-                      }`}>
-                        {balance > 0 ? "+" : ""}£{Math.abs(balance)}
+                        ))}
+                      <p
+                        className={`text-xl font-bold ${balance > 0
+                            ? 'text-emerald-400'
+                            : balance < 0
+                              ? 'text-red-400'
+                              : 'text-slate-400'
+                          }`}
+                      >
+                        {balance > 0 ? '+' : ''}£{Math.abs(balance)}
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-4 text-xs">
                     {p.contributed > 0 && (
                       <span className="text-slate-400">
-                        <span className="text-slate-500">In:</span> <span className="text-red-400 font-semibold">£{p.contributed}</span>
+                        <span className="text-slate-500">In:</span>{' '}
+                        <span className="text-red-400 font-semibold">£{p.contributed}</span>
                       </span>
                     )}
                     {p.withdrawn > 0 && (
                       <span className="text-slate-400">
-                        <span className="text-slate-500">Out:</span> <span className="text-emerald-400 font-semibold">£{p.withdrawn}</span>
+                        <span className="text-slate-500">Out:</span>{' '}
+                        <span className="text-emerald-400 font-semibold">£{p.withdrawn}</span>
                       </span>
                     )}
                   </div>
@@ -338,7 +335,7 @@ export default function App() {
         >
           <Plus size={18} /> New Round
         </button>
-        
+
         <div className="flex gap-2">
           <input
             type="number"
@@ -358,7 +355,7 @@ export default function App() {
             Max
           </button>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={playerLoses}
