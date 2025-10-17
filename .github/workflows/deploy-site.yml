@@ -1,0 +1,54 @@
+name: Deploy Site
+
+on:
+  push:
+    branches:
+      - main # replace with your default branch if different
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repo
+      - uses: actions/checkout@v3
+
+      # 2. Setup Node.js (for Vite)
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      # 3. Install and build React app
+      - name: Install React app dependencies
+        run: |
+          cd pot
+          npm ci
+
+      - name: Build React app
+        run: |
+          cd pot
+          npm run build
+
+      # 4. Prepare deploy folder
+      - name: Prepare deploy folder
+        run: |
+          # Clean deploy folder
+          rm -rf deploy
+          mkdir -p deploy
+
+          # Copy landing page root
+          cp -r index.html deploy/
+          cp -r assets deploy/  # include any other static files you have
+
+          # Copy React app to /pot
+          mkdir -p deploy/pot
+          cp -r pot/dist/* deploy/pot/
+
+      # 5. Deploy everything to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          publish_branch: gh-pages
