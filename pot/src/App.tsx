@@ -129,7 +129,7 @@ export default function App() {
                   onChange={(e) => setNewPlayer(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addPlayer()}
                   placeholder="Enter player name..."
-                  className="flex-1 h-11 rounded-xl border border-slate-600 bg-slate-900/50 px-4 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="flex-1 h-11 rounded-xl border border-slate-600 bg-slate-900/50 px-4 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
                 <button
                   onClick={addPlayer}
@@ -330,7 +330,7 @@ export default function App() {
               if (!e.target.value || num <= state.pot) setBet(e.target.value);
             }}
             max={state.pot}
-            className="flex-1 h-12 rounded-xl border border-slate-600 bg-slate-900/50 px-4 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="flex-1 h-12 rounded-xl border border-slate-600 bg-slate-900/50 px-4 text-base text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           />
           <button
             onClick={() => setBet(state.pot.toString())}
