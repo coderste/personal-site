@@ -86,10 +86,11 @@ export default function App() {
       return;
     }
     const nextDealer = (state.dealerIndex + 1) % state.players.length;
+    const nextTurn = (state.currentTurn + 1) % state.players.length;
     const winnings = betAmount * 2;
     updateState({
       dealerIndex: nextDealer,
-      currentTurn: nextDealer,
+      currentTurn: nextTurn,
       pot: state.pot - betAmount,
       round: 1,
       players: state.players.map((p, i) => ({
@@ -185,8 +186,8 @@ export default function App() {
                 onClick={startGame}
                 disabled={state.players.length < 2}
                 className={`w-full h-12 rounded-xl text-sm font-bold transition-all shadow-lg ${state.players.length < 2
-                    ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 active:scale-98 shadow-blue-900/30'
+                  ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 active:scale-98 shadow-blue-900/30'
                   }`}
               >
                 Start Game
@@ -266,8 +267,8 @@ export default function App() {
               <div
                 key={p.name}
                 className={`rounded-xl border transition-all ${isCurrentPlayer
-                    ? 'bg-gradient-to-r from-blue-600/20 to-blue-700/10 border-blue-500/50 shadow-lg shadow-blue-900/20'
-                    : 'bg-slate-800/30 border-slate-700/50 hover:border-slate-600/50'
+                  ? 'bg-gradient-to-r from-blue-600/20 to-blue-700/10 border-blue-500/50 shadow-lg shadow-blue-900/20'
+                  : 'bg-slate-800/30 border-slate-700/50 hover:border-slate-600/50'
                   }`}
               >
                 <div className="p-4">
@@ -295,10 +296,10 @@ export default function App() {
                         ))}
                       <p
                         className={`text-xl font-bold ${balance > 0
-                            ? 'text-emerald-400'
-                            : balance < 0
-                              ? 'text-red-400'
-                              : 'text-slate-400'
+                          ? 'text-emerald-400'
+                          : balance < 0
+                            ? 'text-red-400'
+                            : 'text-slate-400'
                           }`}
                       >
                         {balance > 0 ? '+' : ''}£{Math.abs(balance)}
