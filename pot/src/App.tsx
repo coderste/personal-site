@@ -33,6 +33,8 @@ export default function App() {
   });
   const [newPlayer, setNewPlayer] = useState('');
   const [bet, setBet] = useState('');
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editFields, setEditFields] = useState({ contributed: '', withdrawn: '', pot: '' });
 
   useEffect(() => {
     try {
@@ -55,6 +57,27 @@ export default function App() {
   };
 
   const removePlayer = (index: number) => updatePlayers((p) => p.filter((_, i) => i !== index));
+
+  const openEdit = (i: number) => {
+    const p = state.players[i];
+    setEditingIndex(i);
+    setEditFields({ contributed: String(p.contributed), withdrawn: String(p.withdrawn), pot: String(state.pot) });
+  };
+
+  const saveEdit = () => {
+    if (editingIndex === null) return;
+    const contributed = Math.max(0, Number(editFields.contributed) || 0);
+    const withdrawn = Math.max(0, Number(editFields.withdrawn) || 0);
+    const pot = Math.max(0, Number(editFields.pot) || 0);
+    setState((prev) => ({
+      ...prev,
+      pot,
+      players: prev.players.map((p, i) =>
+        i === editingIndex ? { ...p, contributed, withdrawn } : p,
+      ),
+    }));
+    setEditingIndex(null);
+  };
 
   const startGame = () => {
     if (state.players.length < 2) {
@@ -266,6 +289,7 @@ export default function App() {
             const balance = getBalance(p);
             const isCurrentPlayer = i === state.currentTurn;
             const isDealer = i === state.dealerIndex;
+            const isEditing = editingIndex === i;
 
             return (
               <div
@@ -291,40 +315,91 @@ export default function App() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-1.5">
-                      {balance !== 0 &&
-                        (balance > 0 ? (
-                          <TrendingUp size={18} className="text-emerald-400" />
-                        ) : (
-                          <TrendingDown size={18} className="text-red-400" />
-                        ))}
-                      <p
-                        className={`text-xl font-bold ${balance > 0
-                            ? 'text-emerald-400'
-                            : balance < 0
-                              ? 'text-red-400'
-                              : 'text-slate-400'
-                          }`}
-                      >
-                        {balance > 0 ? '+' : ''}£{Math.abs(balance)}
-                      </p>
+                    <div className="flex items-center gap-2">
+                      {!isEditing && (
+                        <>
+                          <div className="flex items-center gap-1.5">
+                            {balance !== 0 && (balance > 0
+                              ? <TrendingUp size={18} className="text-emerald-400" />
+                              : <TrendingDown size={18} className="text-red-400" />
+                            )}
+                            <p className={`text-xl font-bold ${balance > 0 ? 'text-emerald-400' : balance < 0 ? 'text-red-400' : 'text-slate-400'}`}>
+                              {balance > 0 ? '+' : ''}£{Math.abs(balance)}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => openEdit(i)}
+                            className="text-slate-500 hover:text-slate-300 transition-colors text-xs border border-slate-600 rounded-lg px-2 py-1"
+                          >
+                            Edit
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex gap-4 text-xs">
-                    {p.contributed > 0 && (
-                      <span className="text-slate-400">
-                        <span className="text-slate-500">In:</span>{' '}
-                        <span className="text-red-400 font-semibold">£{p.contributed}</span>
-                      </span>
-                    )}
-                    {p.withdrawn > 0 && (
-                      <span className="text-slate-400">
-                        <span className="text-slate-500">Out:</span>{' '}
-                        <span className="text-emerald-400 font-semibold">£{p.withdrawn}</span>
-                      </span>
-                    )}
-                  </div>
+                  {isEditing ? (
+                    <div className="space-y-2 mt-1">
+                      <div className="grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="block text-xs text-slate-500 mb-1">In (£)</label>
+                          <input
+                            type="number"
+                            value={editFields.contributed}
+                            onChange={(e) => setEditFields((f) => ({ ...f, contributed: e.target.value }))}
+                            className="w-full h-9 rounded-lg border border-slate-600 bg-slate-900/50 px-2 text-sm text-red-400 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-slate-500 mb-1">Out (£)</label>
+                          <input
+                            type="number"
+                            value={editFields.withdrawn}
+                            onChange={(e) => setEditFields((f) => ({ ...f, withdrawn: e.target.value }))}
+                            className="w-full h-9 rounded-lg border border-slate-600 bg-slate-900/50 px-2 text-sm text-emerald-400 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-slate-500 mb-1">Pot (£)</label>
+                          <input
+                            type="number"
+                            value={editFields.pot}
+                            onChange={(e) => setEditFields((f) => ({ ...f, pot: e.target.value }))}
+                            className="w-full h-9 rounded-lg border border-slate-600 bg-slate-900/50 px-2 text-sm text-amber-400 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2 pt-1">
+                        <button
+                          onClick={saveEdit}
+                          className="flex-1 h-9 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-all flex items-center justify-center gap-1.5"
+                        >
+                          <Check size={14} /> Save
+                        </button>
+                        <button
+                          onClick={() => setEditingIndex(null)}
+                          className="h-9 px-4 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-4 text-xs">
+                      {p.contributed > 0 && (
+                        <span className="text-slate-400">
+                          <span className="text-slate-500">In:</span>{' '}
+                          <span className="text-red-400 font-semibold">£{p.contributed}</span>
+                        </span>
+                      )}
+                      {p.withdrawn > 0 && (
+                        <span className="text-slate-400">
+                          <span className="text-slate-500">Out:</span>{' '}
+                          <span className="text-emerald-400 font-semibold">£{p.withdrawn}</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             );
